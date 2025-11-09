@@ -39,31 +39,25 @@ struct alignas(64) Node {
 
 class MPMCBuf {
 private:
-    const size_t size_;
+    size_t size_;
     std::unique_ptr<Node[]> buf_;
     alignas(64) std::atomic<size_t> head_;
     alignas(64) std::atomic<size_t> tail_;
 
 public:
-    explicit MPMCBuf(size_t size)
-        : size_(adjust_size(size)),
-          buf_(std::make_unique<Node[]>(size_)),
-          head_(0),
-          tail_(0)
+    MPMCBuf(size_t size) : head_(0), tail_(0)
     {
+         if (size < 2) size = 2;
+        // 2의 제곱으로 보정
+        if ((size & (size - 1)) != 0) {
+            size_t cap = 1;
+            while (cap < size) cap <<= 1;
+            size = cap;
+        }
+        size_ = size;
+        buf_ = std::make_unique<Node[]>(size_);
         for (size_t i = 0; i < size_; ++i)
             buf_[i].seq.store(i, std::memory_order_relaxed);
-    }
-
-private:
-    static size_t adjust_size(size_t n) {
-        if (n < 2) n = 2;
-        if ((n & (n - 1)) != 0) {
-            size_t cap = 1;
-            while (cap < n) cap <<= 1;
-            n = cap;
-        }
-        return n;
     }
 
 public:

@@ -46,7 +46,7 @@ private:
     alignas(64) std::atomic<size_t> head_; // single consumer
     alignas(64) std::atomic<size_t> tail_; // multi producer
 public:
-    explicit MPSCBuf(size_t size) : head_(0), tail_(0)
+    MPSCBuf(size_t size) : head_(0), tail_(0)
     {
         if (size < 2) size = 2;
         // 2의 제곱으로 보정
