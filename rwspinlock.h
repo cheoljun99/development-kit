@@ -4,7 +4,7 @@
  * 구현 개요:
  *  - 단일 32비트 원자 변수(state_) 기반으로 읽기/쓰기 상태 관리
  *      * 최상위 비트: 쓰기(lock) 플래그
- *      * 나머지 31비트: 읽기(reader) 카운터
+ *      * 나머지 31비트: 읽기(reader) 카운터 (최대 2,147,483,647명 동시 리더 지원)
  *  - lock_shared()/unlock_shared(): reader 획득 및 해제
  *  - lock()/unlock(): writer 획득 및 해제
  *  - compare_exchange_weak 기반 CAS 반복으로 lock 획득
