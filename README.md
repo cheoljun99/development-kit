@@ -23,13 +23,13 @@ Logical data structure classes
 System functions available on Linux and Windows
 
 - **📡 Shared Buffer Object**  
-A buffer class that allows data to be shared between multiple threads
+A buffer class that allows data to be shared between multi thread
 
 - **📡 Signal Buffer Object**  
-A buffer class that allows data to be sent and received via signals between multiple threads
+A buffer class that allows data to be sent and received via signals between multi thread
 
 - **📡 Synchronization Mechanism Object**  
-Synchronization mechanism classes used between multiple threads
+Synchronization mechanism classes used between multi thread
 
 - **📡 Thread Object**  
-Thread object classes and thread pool classes available for threaded programming
+Thread object classes and thread pool classes available for multi thread programming
