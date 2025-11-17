@@ -1,8 +1,8 @@
-# 🔗 Universal C/C++ System Programming Tool
+# 🛠️ Universal C/C++ System Programming Tool
 
 <img src="icon.png" width="30%">
 
-🧑🏻‍💻 **Universal C/C++ System Programming Tool** is a class creation project that can be applied universally to any type of system programming project.
+🔧 **Universal C/C++ System Programming Tool** is a class creation project that can be applied universally to any type of system programming project.
 
 ## 💻️ Environment
 
