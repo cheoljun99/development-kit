@@ -1,13 +1,11 @@
 /*
  * SpinLock: Simple and High-Performance Exclusive Spin Lock
  *
- * 구현 개요:
+ * 특징:
  *  - std::atomic_flag 기반의 단일 비트 락 상태 관리
  *  - test_and_set()으로 lock 획득, clear()로 해제
  *  - CPU 아키텍처별 pause/yield 명령을 이용한 backoff 지원
  *  - 64바이트 캐시 라인 정렬로 false sharing 최소화
- *
- * 동작 특성:
  *  - 커널 블로킹 없음, 완전한 busy-wait 스핀락
  *  - 짧은 임계 구역에서 최고의 성능
  *  - 장시간 경합 시 CPU 점유율 급증 가능

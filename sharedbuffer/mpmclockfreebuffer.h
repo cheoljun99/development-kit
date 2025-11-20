@@ -1,9 +1,6 @@
 /*
  * Vyukov Bounded MPMC Lock-Free Queue (Byte Buffer Version)
  *
- * 본 구현은 Dmitry Vyukov가 설계한 bounded MPMC(lock-free, multiple-producer multiple-consumer) 큐 알고리즘을
- * 원형 버퍼(ring buffer) 기반으로 준수한 버전이다.
- *
  * 특징:
  *  - 다중 producer, 다중 consumer 환경에서 완전한 lock-free 보장
  *  - ABA 문제 방지를 위한 per-slot sequence 관리
@@ -17,8 +14,6 @@
  *  - enqueue()/dequeue()는 busy-spin 기반이며, 필요 시 _mm_pause() 또는 yield() 추가 권장
  *  - 큐 파괴 시점에는 모든 producer/consumer 스레드 종료가 보장되어야 함
  *
- * 본 코드는 Dmitry Vyukov의 공개 알고리즘을 기반으로 한 구현이며,
- * Folly, rigtorp, moodycamel 등의 lock-free 큐와 동일한 알고리즘이다.
  */
 
 #pragma once
@@ -28,7 +23,7 @@
 #include <cstring>
 #include <memory>
 #include <cassert>
-#include "sharedbuf.h"
+#include "sharedbuffer.h"
 
 #define MAX_NODE_SIZE 65535
 
@@ -38,7 +33,7 @@ struct alignas(64) Node {
     uint8_t data_[MAX_NODE_SIZE];
 };
 
-class MPMCLockFreeBuf : public SharedBuf {
+class MPMCLockFreeBuffer : public SharedBuffer {
 private:
     size_t size_;
     std::unique_ptr<Node[]> buf_;
@@ -46,7 +41,7 @@ private:
     alignas(64) std::atomic<size_t> tail_;
 
 public:
-    MPMCLockFreeBuf(size_t size) : head_(0), tail_(0)
+    MPMCLockFreeBuffer(size_t size) : head_(0), tail_(0)
     {
          if (size < 2) size = 2;
         // 2의 제곱으로 보정

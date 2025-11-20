@@ -1,9 +1,6 @@
 /*
  * Lamport Bounded SPSC Lock-Free Queue (Byte Buffer Version)
  *
- * 본 구현은 Leslie Lamport가 제안한 bounded SPSC(Single Producer, Single Consumer)
- * ring buffer 알고리즘을 기반으로 한 lock-free 큐이다.
- *
  * 특징:
  *  - 단일 producer, 단일 consumer 환경에서 완전한 wait-free 동작 보장
  *  - CAS(compare_exchange) 연산이 필요 없음
@@ -20,9 +17,6 @@
  *  - 멀티스레드 환경에서 push/pop을 동시에 호출하지 않으면 lock-free 특성이 사라진다.
  *  - 절대 SPSC 구조외에는 사용하지 말 것.
  *  - 절대적인 안전성은 SPSC 구조일때만 보장.
- *
- * 본 코드는 Lamport의 고전적인 SPSC 큐 알고리즘을 C++ 메모리 모델에 맞게 구현한 형태로,
- * 고속 통신 버퍼, 오디오 스트림, 네트워크 패킷 큐 등 실시간 처리용으로 적합하다.
  */
 
 #pragma once
@@ -32,7 +26,7 @@
 #include <atomic>
 #include <vector>
 #include <memory>
-#include "sharedbuf.h"
+#include "sharedbuffer.h"
 
 #define MAX_SLOT_SIZE 65535
 
@@ -41,14 +35,14 @@ struct Slot {
     uint8_t data_[MAX_SLOT_SIZE];
 };
 
-class SPSCLockFreeBuf : public SharedBuf{
+class SPSCLockFreeBuffer : public SharedBuffer{
 private:
     std::unique_ptr<Slot[]> buf_;
     std::atomic<size_t> head_;
     std::atomic<size_t> tail_;
     size_t size_;
 public:
-    SPSCLockFreeBuf(size_t size): head_(0),tail_(0){
+    SPSCLockFreeBuffer(size_t size): head_(0),tail_(0){
         if (size < 2) size = 2;
         if ((size & (size - 1)) != 0) {// 2의 제곱이 아닐 경우 상위 제곱으로 보정
             size_t cap = 1;

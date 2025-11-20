@@ -1,7 +1,7 @@
 /*
  * RWSpinLock: High-Performance Reader-Writer Spin Lock
  *
- * 구현 개요:
+ * 특징:
  *  - 단일 32비트 원자 변수(state_) 기반으로 읽기/쓰기 상태 관리
  *      * 최상위 비트: 쓰기(lock) 플래그
  *      * 나머지 31비트: 읽기(reader) 카운터 (최대 2,147,483,647명 동시 리더 지원)
@@ -9,8 +9,6 @@
  *  - lock()/unlock(): writer 획득 및 해제
  *  - compare_exchange_weak 기반 CAS 반복으로 lock 획득
  *  - 64바이트 캐시 라인 정렬으로 false sharing 최소화
- *
- * 동작 특성:
  *  - 순수 스핀락 기반, 커널 블록킹 없음
  *  - 짧은 임계 구간에서 높은 성능 제공
  *  - starvation 방지 로직 없음(읽기 지속 시 writer 대기 가능)
@@ -25,7 +23,7 @@
  *  - unlock_shared()/unlock(): memory_order_release
  *  - CAS 실패 시 relaxed로 재시도
  *
- * 사용 주의:
+ * 주의:
  *  - 락 구간이 길거나 스레드 수가 매우 많을 경우 CPU 점유 과다 가능
  *  - modern x86/ARM 환경에서는 std::this_thread::yield() fallback 없음
  *  - 장시간 경합이나 우선순위 보장이 필요한 경우 별도 설계 필요

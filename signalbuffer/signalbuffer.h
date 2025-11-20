@@ -1,14 +1,14 @@
 #pragma once
 #include <memory>
-#include "sharedbuf.h"
+#include "sharedbuffer.h"
 
-class SignalBuf {
+class SignalBuffer {
 protected:
-    std::unique_ptr<SharedBuf> shared_buf_; 
+    std::unique_ptr<SharedBuffer> shared_buf_; 
 
 public:
-    SignalBuf(std::unique_ptr<SharedBuf> shared_buf) : shared_buf_(std::move(shared_buf)) {}
-    virtual ~SignalBuf() = default;
+    SignalBuffer(std::unique_ptr<SharedBuffer> shared_buf) : shared_buf_(std::move(shared_buf)) {}
+    virtual ~SignalBuffer() = default;
     // enqueue 시 신호를 보내는 함수
     virtual int32_t enqueue_wake(const uint8_t* data, size_t len) = 0;
     // 대기 중인 컨슈머 모두 깨우기

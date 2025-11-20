@@ -33,7 +33,7 @@
 #include <type_traits>
 #include <cassert>
 #include <memory>
-#include "sharedbuf.h"
+#include "sharedbuffer.h"
 
 #define MAX_NODE_SIZE 65535
 
@@ -43,14 +43,14 @@ struct alignas(64) Node {
     uint8_t data_[MAX_NODE_SIZE];
 };
 
-class SPMCLockFreeBuf : public SharedBuf{
+class SPMCLockFreeBuffer : public SharedBuffer{
 private:
     size_t size_;
     std::unique_ptr<Node[]> buf_;
     alignas(64) std::atomic<size_t> head_;
     alignas(64) std::atomic<size_t> tail_;
 public:
-    SPMCLockFreeBuf(size_t size): head_(0), tail_(0)
+    SPMCLockFreeBuffer(size_t size): head_(0), tail_(0)
     {
         if (size < 2) size = 2;
         // 2의 제곱이 아닐 경우 상위 제곱으로 보정

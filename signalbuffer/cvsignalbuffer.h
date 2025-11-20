@@ -1,17 +1,12 @@
 /*
  * CVSignalbuf: Condition Variable 기반  Producer Consumer Queue Wrapper
  *
- * 본 구현은 Producer Consumer 환경에서 std::condition_variable과 std::mutex를 사용하여
- * 컨슈머 스레드가 안전하게 데이터를 dequeue_wait 할 수 있도록 관리하는 래퍼 클래스이다.
- *
- * 핵심 원칙:
+ * 특징:
  *  - 외부에서 dequeue_wait 메서드 호출할 때 **while 루프로 반복 호출**해야 하며,
  *    이를 통해 스피리어스 웨이크업이나 간헐적 데이터 도착 상황에서도
  *    항상 안전하게 데이터를 처리할 수 있음을 보장한다.
-*  - wait 호출 직전에 프로듀서가 enqueue_wake() 또는 wake_all()을 수행하더라도,
+ *  - wait 호출 직전에 프로듀서가 enqueue_wake() 또는 wake_all()을 수행하더라도,
  *    flag 확인 기반으로 건너뛰기 때문에 컨슈머는 wait에 빠지지 않고 즉시 처리 가능하다.
- *
- * 특징:
  *  - 내부 공유가능한 원형 버퍼 사용, 단일 다중 프로듀서 enqueue 지원
  *  - flag 기반 wake/notify로 lost wakeup 방지
  *  - enqueue_wake 호출 시 깨어난 컨슈머가 즉시 데이터 처리
@@ -32,15 +27,15 @@
 #include <mutex>
 #include <condition_variable>
 #include <cstdint>
-#include "SignalBuf.h"
+#include "signalbuffer.h"
 
-class CVSignalbuf : public SignalBuf{
+class CVSignalbuffer : public SignalBuffer{
     std::mutex mtx_;
     std::condition_variable cv_;
     uint64_t flag_;
 
 public:
-    CVSignalbuf(std::unique_ptr<SharedBuf> shared_buf) : SignalBuf(std::move(shared_buf)), flag_(0) {}
+    CVSignalbuffer(std::unique_ptr<SharedBuffer> shared_buf) : SignalBuffer(std::move(shared_buf)), flag_(0) {}
 
     int32_t enqueue_wake(const uint8_t* data, size_t len) override {
         int32_t n = shared_buf_->enqueue(data, len);

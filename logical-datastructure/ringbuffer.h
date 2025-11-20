@@ -1,5 +1,5 @@
 /*
- * RingBuf: 고정 크기 순환 버퍼(Ring Buffer) 구현
+ * RingBuffer: 고정 크기 순환 버퍼(Ring Buffer) 구현
  *
  * 구현 개요:
  *  - Slot 단위로 데이터를 저장하는 구조로, 각 Slot은 길이(len_)와 최대 65535바이트의 데이터를 보유
@@ -23,7 +23,7 @@
  *  - 메모리 복사 오버헤드 외에 별도의 잠금(lock)이나 커널 개입 없음
  *
  * 사용 예시:
- *  RingBuf ring(128);
+ *  RingBuffer ring(128);
  *  uint8_t data[10] = {0,1,2,3,4,5,6,7,8,9};
  *  ring.push_infinite(data, 10);
  *  uint8_t out[10];
@@ -45,7 +45,7 @@ struct Slot {
     uint8_t slot_[MAX_SLOT_SIZE];
 };
 
-class RingBuf {
+class RingBuffer {
 private:
     std::unique_ptr<Slot[]> buf_;
     size_t head_;
@@ -53,7 +53,7 @@ private:
     size_t cnt_;
     size_t size_;
 public:
-    RingBuf(size_t size): head_(0),tail_(0),cnt_(0){
+    RingBuffer(size_t size): head_(0),tail_(0),cnt_(0){
             if (size < 2) size = 2;
             if ((size & (size - 1)) != 0) {// 2의 제곱이 아닐 경우 상위 제곱으로 보정
                 size_t cap = 1;
@@ -65,7 +65,7 @@ public:
             buf_=std::make_unique<Slot[]>(size_);
         }
 
-    RingBuf(const RingBuf& oth)
+    RingBuffer(const RingBuffer& oth)
         : buf_(std::make_unique<Slot[]>(oth.size_)),
           head_(oth.head_),
           tail_(oth.tail_),
@@ -73,7 +73,7 @@ public:
           size_(oth.size_) {
             std::memcpy(buf_.get(), oth.buf_.get(), sizeof(Slot) * size_);
         }
-    RingBuf& operator=(const RingBuf& oth) {
+    RingBuffer& operator=(const RingBuffer& oth) {
         if (this == &oth) return *this;
         buf_ = std::make_unique<Slot[]>(oth.size_);
         size_ = oth.size_;
@@ -83,7 +83,7 @@ public:
         std::memcpy(buf_.get(), oth.buf_.get(), sizeof(Slot) * size_);
             return *this;
         }
-    RingBuf(RingBuf&& oth)
+    RingBuffer(RingBuffer&& oth)
         : buf_(std::move(oth.buf_)),
           head_(oth.head_),
           tail_(oth.tail_),
@@ -91,7 +91,7 @@ public:
           size_(oth.size_) {
             oth.head_ = oth.tail_ = oth.cnt_ = oth.size_ = 0;
         }
-    RingBuf& operator=(RingBuf&& oth) noexcept {
+    RingBuffer& operator=(RingBuffer&& oth) noexcept {
         if (this != &oth) {
             buf_ = std::move(oth.buf_);
             head_ = oth.head_;
