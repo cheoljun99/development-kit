@@ -38,7 +38,7 @@ class FutexSignalBuffer : public SignalBuffer{
     alignas(4) atomic_int flag_;
 
 public:
-    FutexSignalBuffer(SharedBuffer* shared_buf) : SignalBuffer(shared_buf), flag_(0) {}
+    FutexSignalBuffer(std::unique_ptr<SharedBuffer> shared_buf) : SignalBuffer(std::move(shared_buf)), flag_(0) {}
 
     int32_t enqueue_wake(const uint8_t* data, size_t len) override{
         int32_t n = shared_buf_->enqueue(data, len);
