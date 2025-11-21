@@ -4,7 +4,7 @@
 
 class SignalBuffer {
 protected:
-    SharedBuffer* shared_buf_; 
+    std::unique_ptr<SharedBuffer> shared_buf_; 
 
 public:
     SignalBuffer(std::unique_ptr<SharedBuffer> shared_buf) : shared_buf_(std::move(shared_buf)) {}
