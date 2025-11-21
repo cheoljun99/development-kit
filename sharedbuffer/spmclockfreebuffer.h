@@ -1,9 +1,6 @@
 /*
  * Vyukov Bounded SPMC Lock-Free Queue (Byte Buffer Version)
  *
- * 본 구현은 Dmitry Vyukov가 제안한 bounded MPMC 알고리즘을 기반으로 파생된
- * SPMC(Single Producer, Multiple Consumer) 형태의 lock-free 원형 버퍼(queue)이다.
- *
  * 특징:
  *  - 단일 producer, 복수 consumer 환경에서 완전한 lock-free 동작 보장
  *  - 각 슬롯(Node)의 seq 필드를 통한 상태 추적으로 ABA 문제 방지
@@ -19,9 +16,6 @@
  *  - 경쟁 상황에서 busy-spin(continue 루프)이 발생할 수 있으며,
  *    필요 시 _mm_pause() 또는 std::this_thread::yield() 삽입 권장.
  *  - 큐가 파괴될 때는 모든 producer / consumer 스레드가 종료된 상태여야 한다.
- *
- * 본 코드는 Dmitry Vyukov의 공개 알고리즘을 기반으로 한 구현이며,
- * Folly, rigtorp, moodycamel 등의 lock-free 큐와 동일한 알고리즘이다.
  */
 
 #pragma once

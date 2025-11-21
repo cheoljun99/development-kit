@@ -4,10 +4,10 @@
 
 class SignalBuffer {
 protected:
-    std::unique_ptr<SharedBuffer> shared_buf_; 
+    SharedBuffer* shared_buf_; 
 
 public:
-    SignalBuffer(std::unique_ptr<SharedBuffer> shared_buf) : shared_buf_(std::move(shared_buf)) {}
+    SignalBuffer(SharedBuffer* shared_buf) : shared_buf_(shared_buf) {}
     virtual ~SignalBuffer() = default;
     // enqueue 시 신호를 보내는 함수
     virtual int32_t enqueue_wake(const uint8_t* data, size_t len) = 0;
