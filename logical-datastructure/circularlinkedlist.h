@@ -1,11 +1,11 @@
-#pragma once
+Ôªø#pragma once
 #pragma once
 #include <cstdint>
 
 #define MAX_NAME_SIZE 20
 
 struct Data {
-	char name_[MAX_NAME_SIZE]; //¿Ø¿œ ≈∞
+	char name_[MAX_NAME_SIZE]; //Ïú†ÏùºÌÇ§
 };
 
 struct Node {
@@ -16,7 +16,7 @@ struct Node {
 
 class CircularLinkedList {
 private:
-	Node* dummy_; // ¥ıπÃ
+	Node* dummy_; // ÎçîÎØ∏ ÏÇ¨Ïö©
 public:
 	CircularLinkedList();
 	~CircularLinkedList();
