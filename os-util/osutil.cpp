@@ -616,7 +616,11 @@
             return -1;
         }
         int enable_canfd = 1;
-        setsockopt(canfd_socket_fd, SOL_CAN_RAW, CAN_RAW_FD_FRAMES, &enable_canfd, sizeof(enable_canfd));
+        if (setsockopt(canfd_socket_fd, SOL_CAN_RAW, CAN_RAW_FD_FRAMES, &enable_canfd, sizeof(enable_canfd)) < 0) {
+            std::cerr << "[ERROR] setsockopt(CAN_RAW_FD_FRAMES): " << strerror(errno) << "\n";
+            close(canfd_socket_fd);
+            return -1;
+        }
         struct ifreq ifr;
         memset(&ifr, 0, sizeof(ifr));
         strncpy(ifr.ifr_name, source_nic, IFNAMSIZ - 1);
